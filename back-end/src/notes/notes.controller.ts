@@ -22,6 +22,7 @@ export class NotesController {
     // }
 
     @Get()
+    @UsePipes(new ValidationPipe())
     async findAll(): Promise<Note[]> {
         return this.notesService.findAll();
     }
@@ -36,6 +37,7 @@ export class NotesController {
 
 
     @Get(':id')
+    @UsePipes(new ValidationPipe())
     findOne(@Param('id', new ParseIntPipe()) id) {
         return this.notesService.findOne(id);
     }
@@ -64,7 +66,7 @@ export class NotesController {
 
     @Put(':id')
     async update(@Param('id') id: string, @Body() updateNoteDto: UpdateNoteDto) {
-        await this.notesService.update({id, description: updateNoteDto.description});
+        await this.notesService.update({id, description: updateNoteDto.description, date: updateNoteDto.date});
     }
 
     @Delete(':id')

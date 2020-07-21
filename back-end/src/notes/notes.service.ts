@@ -3,6 +3,7 @@ import { INote } from "./interfaces";
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Note } from "./note.entity";
+import { DateUtils } from "typeorm/util/DateUtils";
 
 @Injectable()
 export class NotesService {
@@ -18,13 +19,15 @@ export class NotesService {
         return await this.notesRepository.find();
     }
 
-    findOne(id: string): Promise<Note> {
-        return this.notesRepository.findOne({where: {id}})
+    async findOne(id: string): Promise<Note> {
+        console.log(typeof (await this.notesRepository.findOne({where: {id}})).date)
+        return await this.notesRepository.findOne({where: {id}})
     }
 
     async create(note: INote): Promise<void> {
         const entity = new Note()
         entity.description = note.description
+        entity.date = DateUtils.mixedDateToDate(note.date)
         await this.notesRepository.save(entity)
     }
 
