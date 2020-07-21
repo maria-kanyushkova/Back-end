@@ -5,6 +5,8 @@ import { Repository } from 'typeorm';
 import { Note } from "./note.entity";
 import { DateUtils } from "typeorm/util/DateUtils";
 
+type TSortParams = { [n in keyof Pick<Note, 'date' | 'id'>]: 'ASC' | 'DESC' }
+
 @Injectable()
 export class NotesService {
     private readonly notes: INote[] = [];
@@ -15,8 +17,8 @@ export class NotesService {
     ) {
     }
 
-    async findAll(): Promise<Note[]> {
-        return await this.notesRepository.find();
+    async findAll(order: TSortParams): Promise<Note[]> {
+        return await this.notesRepository.find({order})
     }
 
     async findOne(id: string): Promise<Note> {

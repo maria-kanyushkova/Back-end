@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, HttpException, HttpStatus, UseFilters, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Query, Post, Put, HttpException, HttpStatus, UseFilters, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CreateNoteDto, UpdateNoteDto } from "./dto";
 import { INote } from './interfaces';
 import { NotesService } from "./notes.service";
@@ -6,6 +6,7 @@ import { ForbiddenException } from 'src/common/exception';
 import { HttpExceptionFilter } from "../common/filter";
 import { JoiValidationPipe, ParseIntPipe } from 'src/common/pipe';
 import { Note } from "./note.entity";
+import { query } from "express";
 
 @Controller('notes')
 @UseFilters(HttpExceptionFilter)
@@ -23,8 +24,8 @@ export class NotesController {
 
     @Get()
     @UsePipes(new ValidationPipe())
-    async findAll(): Promise<Note[]> {
-        return this.notesService.findAll();
+    async findAll(@Query() sort: object): Promise<Note[]> {
+        return this.notesService.findAll(sort as any);
     }
 
     // @Get()
